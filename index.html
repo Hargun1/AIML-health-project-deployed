@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surgical Safety - Instrument Tracking System</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.10.0/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.2/dist/coco-ssd.min.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <header class="header">
+            <h1>🏥 Surgical Safety - Instrument Tracking</h1>
+            <div class="status">
+                <span id="ai-status" class="status-indicator">AI: Loading...</span>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <section class="video-section">
+                <div class="video-container">
+                    <video id="camera-feed" autoplay muted playsinline loop></video>
+                    <canvas id="detection-overlay"></canvas>
+                </div>
+                <div class="video-controls">
+                    <input type="file" id="video-file-input" accept="video/*" style="display: none;">
+                    <button id="upload-video-btn" class="btn btn-primary">📁 Choose Surgery Video</button>
+                    <button id="play-video-btn" class="btn btn-success" disabled>▶️ Start Analysis</button>
+                    <button id="pause-video-btn" class="btn btn-warning" disabled>⏸️ Pause</button>
+                    <button id="stop-video-btn" class="btn btn-danger" disabled>⏹️ Stop</button>
+                </div>
+            </section>
+
+            <section class="results-section">
+                <div class="detection-panel">
+                    <h3>🔍 Live Surgical Instrument Detection</h3>
+                    <div id="detected-instruments" class="instrument-grid">
+                        <div class="no-detections">
+                            <div class="no-detections-icon">👁️</div>
+                            <div class="no-detections-text">Upload video to start detection</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="safety-panel" id="safety-panel">
+                    <h3>🚨 SURGICAL SAFETY MONITOR</h3>
+                    <div class="safety-status" id="safety-status">
+                        <div class="safety-item">
+                            <label>Total Instruments:</label>
+                            <span id="total-count" class="count">0</span>
+                        </div>
+                        <div class="safety-item">
+                            <label>Currently Visible:</label>
+                            <span id="visible-count" class="count">0</span>
+                        </div>
+                        <div class="safety-item">
+                            <label>⚠️ MISSING INSTRUMENTS:</label>
+                            <span id="missing-count" class="count critical">0</span>
+                        </div>
+                    </div>
+                    <div class="safety-actions">
+                        <button id="manual-scan-btn" class="btn btn-primary">🔍 Manual Scan</button>
+                        <button id="safety-check-btn" class="btn btn-success">✅ Final Safety Check</button>
+                    </div>
+                </div>
+
+                <div class="stats-panel">
+                    <h3>📊 Detection Stats</h3>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <span class="stat-value" id="fps-counter">0</span>
+                            <span class="stat-label">FPS</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" id="confidence-avg">0%</span>
+                            <span class="stat-label">Avg Confidence</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <div id="safety-alert-modal" class="modal">
+            <div class="modal-overlay"></div>
+            <div class="modal-content modal-critical">
+                <div class="modal-header">
+                    <h3>⚠️ CRITICAL SAFETY ALERT</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="alert-content">
+                        <div class="alert-icon">🚨</div>
+                        <h2>INSTRUMENTS MAY BE LEFT IN PATIENT</h2>
+                        <div id="missing-instruments-list" class="missing-list"></div>
+                        <p class="alert-warning">
+                            <strong>STOP CLOSURE - Perform complete instrument count before proceeding</strong>
+                        </p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="verify-safe-btn" class="btn btn-success">✅ All Instruments Accounted For</button>
+                    <button id="emergency-stop-btn" class="btn btn-critical">🚨 Emergency Stop</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>
+
